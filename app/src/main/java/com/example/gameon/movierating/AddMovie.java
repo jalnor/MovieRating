@@ -1,15 +1,18 @@
+/****************************************
+ * Assignment HW3                       *
+ * AddMovie.java                        *
+ * Jarrod Norris, Andrew Schelesinger   *
+ ****************************************/
+
 package com.example.gameon.movierating;
 
-import android.app.Application;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,52 +39,44 @@ public class AddMovie extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
-
+        // Gets intent from MainActivity
         Intent intent = getIntent();
 
 
-            //
-            final Spinner genre = findViewById(R.id.spinner);
-            String[] genres = new String[]{"Action", "Animation", "Comedy", "Documentary", "Family", "Horror", "Crime", "Others"};
-            ArrayAdapter<String> adapt = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, genres);
-            genre.setAdapter(adapt);
+        // Gets the spinner and creates the dropdown list and adds String[] names to it
+        final Spinner genre = findViewById(R.id.spinner);
+        String[] genres = new String[]{"Action", "Animation", "Comedy", "Documentary", "Family", "Horror", "Crime", "Others"};
+        ArrayAdapter<String> adapt = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, genres);
+        genre.setAdapter(adapt);
+        // Gets the seekBar and checks for changes, then displays the changes in a TextView
+        final SeekBar sb = findViewById(R.id.seekBar);
+        final TextView sBarText = findViewById(R.id.sBarTextView);
+        sBarText.setText("0");
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                sb.setKeyProgressIncrement(1);
+                String displayText = "" + progress;
+                sBarText.setText(displayText);
+            }
 
-            final SeekBar sb = findViewById(R.id.seekBar);
-            final TextView sBarText = findViewById(R.id.sBarTextView);
-            sBarText.setText("0");
-            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    int prog = sb.getProgress();
-                    if (progress > prog) {
-                        sb.incrementProgressBy(1);
-                        prog += 1;
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-                    } else {
-                        sb.incrementProgressBy(-1);
-                        prog -= 1;
-                    }
-                    String displayText = "" + prog;
-                    sBarText.setText(displayText);
-                }
+            }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-
+            }
+        });
+        // Checks if the intent from MainActivity has extras and if not goes to Add Movie section
         if ( intent.getExtras() == null ) {
 
             findViewById(R.id.addMovieBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // Gets the name of movie, tests it for empty and displays toast if is requiring name, else adds name to movie object
                     TextInputLayout name = findViewById(R.id.movieNameTextInput);
                     movieName = name.getEditText().getText().toString();
                     Log.d("Items", "Name is " + movieName.isEmpty());
@@ -91,19 +86,24 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setName(movieName);
                     }
-
+                    // Gets the description of movie, tests it for empty and sets desc to unknown, else adds desc to movie object
                     EditText desc = findViewById(R.id.multiDescription);
                     movieDescription = desc.getText().toString();
-                    if (movieDescription.equals("")) {
+                    if ( movieDescription.isEmpty() ) {
                         movie.setDescription("Unknown");
                     } else {
                         movie.setDescription(movieDescription);
                     }
-
+                    // Gets the selected genre if none adds default to movie object
                     movieGenre = genre.getSelectedItem().toString();
                     movie.setGenre(movieGenre);
+                    // Sets the current setting of seekbar rating to movie object, if none selected sets to 0
                     movie.setRating(sBarText.getText().toString());
-
+                    /* Gets the year and tests it for empty, if is sets movie object year to null, else
+                     * tests year against regular expression for correct format, then checks if in between certain values.
+                     * If less than 1921 the toasts needs greater than, if greater than 2018, toasts needs less than.
+                     * Else adds year to movie object
+                     */
                     TextInputLayout year = findViewById(R.id.yearTextInput);
                     movieYear = year.getEditText().getText().toString();
                     if ( !movieYear.isEmpty() ) {
@@ -129,7 +129,9 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setMovieYear(null);
                     }
-
+                    /* Gets the imdb url and validates it using the built-in function URLUtil.isValid
+                     * If not valid toasts needs correct format, else adds url or null to movie object
+                     */
                     TextInputLayout imdb = findViewById(R.id.imdbTextInput);
                     imdbURL = imdb.getEditText().getText().toString();
                     if ( !imdbURL.isEmpty() ) {
@@ -144,7 +146,7 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setImdbRating(null);
                     }
-
+                    // Test log
                     Log.d("Items", "\n" +
                             movieName + "\n" +
                             movieDescription + "\n" +
@@ -152,18 +154,19 @@ public class AddMovie extends AppCompatActivity {
                             sBarText.getText().toString() + "\n" +
                             movieYear + "\n" +
                             imdbURL);
+                    // Checks if erno is true, if any of the above functions fail this will be false
                     if (erno) {
                         Intent intent = new Intent();
                         intent.putExtra("data", movie);
                         setResult(RESULT_OK, intent);
                         finish();
                     }
-
+                    // Resets erno to true for next pass
                     erno = true;
                 }
             });
-        } else {
-
+        } else { // If intent from MainActivity has extras, goes to EditMovie section
+            // From line 170-214 gets the movie attributes from intent and populates fields of activity
             Bundle extras = intent.getExtras();
             Movie oldMovie = extras.getParcelable("Movie");
             final int position = extras.getInt("Position");
@@ -214,7 +217,7 @@ public class AddMovie extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // Gets the name of movie, tests it for empty and displays toast if is requiring name, else adds name to movie object
                     TextInputLayout name = findViewById(R.id.movieNameTextInput);
                     movieName = name.getEditText().getText().toString();
                     Log.d("Items", "Name is " + movieName.isEmpty());
@@ -224,7 +227,7 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setName(movieName);
                     }
-
+                    // Gets the description of movie, tests it for empty and sets desc to unknown, else adds desc to movie object
                     EditText desc = findViewById(R.id.multiDescription);
                     movieDescription = desc.getText().toString();
                     if (movieDescription.equals("")) {
@@ -232,11 +235,16 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setDescription(movieDescription);
                     }
-
+                    // Gets the selected genre if none adds default to movie object
                     movieGenre = genre.getSelectedItem().toString();
                     movie.setGenre(movieGenre);
+                    // Sets the current setting of seekbar rating to movie object, if none selected sets to 0
                     movie.setRating(sBarText.getText().toString());
-
+                    /* Gets the year and tests it for empty, if is sets movie object year to null, else
+                     * tests year against regular expression for correct format, then checks if in between certain values.
+                     * If less than 1921 the toasts needs greater than, if greater than 2018, toasts needs less than.
+                     * Else adds year to movie object
+                     */
                     TextInputLayout year = findViewById(R.id.yearTextInput);
                     movieYear = year.getEditText().getText().toString();
                     if ( !movieYear.isEmpty() ) {
@@ -262,7 +270,9 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setMovieYear(null);
                     }
-
+                    /* Gets the imdb url and validates it using the built-in function URLUtil.isValid
+                     * If not valid toasts needs correct format, else adds url or null to movie object
+                     */
                     TextInputLayout imdb = findViewById(R.id.imdbTextInput);
                     imdbURL = imdb.getEditText().getText().toString();
                     if ( !imdbURL.isEmpty() ) {
@@ -277,7 +287,7 @@ public class AddMovie extends AppCompatActivity {
                     } else {
                         movie.setImdbRating(null);
                     }
-
+                    // Test log
                     Log.d("Items", "\n" +
                             movieName + "\n" +
                             movieDescription + "\n" +
@@ -286,6 +296,7 @@ public class AddMovie extends AppCompatActivity {
                             movieYear + "\n" +
                             imdbURL + "\n" +
                             position);
+                    // Checks if erno is true, if any of the above functions fail this will be false
                     if (erno) {
                         Intent intent = new Intent();
                         intent.putExtra("data", movie);
@@ -293,7 +304,7 @@ public class AddMovie extends AppCompatActivity {
                         setResult(RESULT_OK, intent);
                         finish();
                     }
-
+                    // Resets erno to true for next pass
                     erno = true;
                 }
             });

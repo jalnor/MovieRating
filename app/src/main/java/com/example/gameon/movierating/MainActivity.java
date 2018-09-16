@@ -1,3 +1,9 @@
+/****************************************
+ * Assignment HW3                       *
+ * MainActivity.java                    *
+ * Jarrod Norris, Andrew Schelesinger   *
+ ****************************************/
+
 package com.example.gameon.movierating;
 
 import android.content.DialogInterface;
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // Gets the add button and creates an intent that is sent to AddMovie activity
         findViewById(R.id.addBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(addIntent, ADD_REQ_CODE);
             }
         });
-
+        /* Gets Edit button and displays an alert with a list of movies then
+         * creates an intent and adds the selected movie and sends it along with
+         * the current  position in the list to AddMovie activity
+         */
         findViewById(R.id.editBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,12 +81,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
                 listMovies.show();
             }
         });
-
+        // Gets the delete button and displays a list of movies and then deletes the selected movie
         findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             movies.remove(which);
         }
     };
-
+    // This is the function that captures the returned data from the add movie intent issued above
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ( requestCode == ADD_REQ_CODE && data != null ) {
@@ -114,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("Items", movie.name);
             } else if ( resultCode == RESULT_CANCELED ) {
-
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.intent_canceled), Toast.LENGTH_LONG);
             } else {
-
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.other_issue), Toast.LENGTH_LONG);
             }
 
-        } else if ( requestCode == EDIT_REQ_CODE && data != null ) {
+        } else if ( requestCode == EDIT_REQ_CODE && data != null ) { // Gets the return for edit intent issued above
             if ( resultCode == RESULT_OK ) {
                 Log.d("Items", "Made it into return result");
                 Bundle bundle = data.getExtras();
@@ -131,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("Items", movie.name);
             } else if ( resultCode == RESULT_CANCELED ) {
-
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.intent_canceled), Toast.LENGTH_LONG);
             } else {
-
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.other_issue), Toast.LENGTH_LONG);
             }
         }
     }

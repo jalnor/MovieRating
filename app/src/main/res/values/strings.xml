@@ -1,3 +1,9 @@
+<!--
+Assignment HW#3
+strings.xml
+Jarrod Norris, Andrew Schlesinger
+-->
+
 <resources>
     <string name="app_name">Movie Rating</string>
     <string name="btn_add">Add Movie</string>
@@ -15,15 +21,14 @@
     <string name="tv_add_movie_year">Year:</string>
     <string name="tv_movie_imdb">IMDB:</string>
     <string name="btn_add_movie">Add Movie</string>
-    <string name="imdb_error">IMDB rating must be between 0.0 and 10.0</string>
     <string name="movie_name_issue">Movie must have a name</string>
     <string name="year_size">Year must be a four digit number (e.g. 1980)</string>
     <string name="year_less_than">Year cannot be less than 1921</string>
     <string name="year_greater_than">Year cannot be greater than 2018</string>
     <string name="desc_hint">Enter up to 1000 characters</string>
     <string name="imdb_format_issue">The IMDB address is not a valid url</string>
-    <string name="imdb_less_than">IMDB rating must be greater than or equal to 0.0</string>
-    <string name="imdb_greater_than">IMDB rating must be less than or equal to 10.0</string>
     <string name="tv_seek_bar" />
     <string name="tv_edit_title">Edit Movie</string>
+    <string name="intent_canceled">The request was canceled</string>
+    <string name="other_issue">Something went wrong</string>
 </resources>

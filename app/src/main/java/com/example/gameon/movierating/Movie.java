@@ -1,3 +1,9 @@
+/****************************************
+ * Assignment HW3                       *
+ * Movie.java                           *
+ * Jarrod Norris, Andrew Schelesinger   *
+ ****************************************/
+
 package com.example.gameon.movierating;
 
 import android.os.Parcel;
