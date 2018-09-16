@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -23,151 +25,277 @@ public class AddMovie extends AppCompatActivity {
     public static String movieGenre = "";
     public static String movieRating = "";
     public static String movieYear = "";
-    public static String imdbRating = "";
     public String regularExpression = "^\\d{4}$";
-    public String imdbRegExpression = "^[+-]?([0-9]*[.])?[0-9]+$";
+    public String imdbURL = "";
     public int min = 1921;
     public int max = 2018;
     public boolean erno = true;
     Movie movie = new Movie();
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
 
-        //
-        final Spinner genre = findViewById(R.id.spinner);
-        String[] genres = new String[]{"Action","Animation","Comedy","Documentary","Family","Horror","Crime","Others"};
-        ArrayAdapter<String> adapt = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, genres);
-        genre.setAdapter(adapt);
+        Intent intent = getIntent();
 
-        final SeekBar sb = findViewById(R.id.seekBar);
-        final TextView sBarText = findViewById(R.id.sBarTextView);
-        sBarText.setText("0");
-        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int prog = sb.getProgress();
-                if ( progress > prog ) {
-                    sb.incrementProgressBy(1);
-                    prog += 1;
 
-                } else {
-                    sb.incrementProgressBy(-1);
-                    prog -= 1;
-                }
-                String displayText = "" + prog;
-                sBarText.setText(displayText);
-            }
+            //
+            final Spinner genre = findViewById(R.id.spinner);
+            String[] genres = new String[]{"Action", "Animation", "Comedy", "Documentary", "Family", "Horror", "Crime", "Others"};
+            ArrayAdapter<String> adapt = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, genres);
+            genre.setAdapter(adapt);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            final SeekBar sb = findViewById(R.id.seekBar);
+            final TextView sBarText = findViewById(R.id.sBarTextView);
+            sBarText.setText("0");
+            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    int prog = sb.getProgress();
+                    if (progress > prog) {
+                        sb.incrementProgressBy(1);
+                        prog += 1;
 
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        findViewById(R.id.addMovieBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                TextInputLayout name = findViewById(R.id.movieNameTextInput);
-                movieName = name.getEditText().getText().toString();
-                Log.d("Items", "Name is " + movieName.isEmpty());
-                if ( movieName.isEmpty() ) {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.movie_name_issue),Toast.LENGTH_LONG).show();
-                    erno = false;
-                } else {
-                    movie.setName(movieName);
+                    } else {
+                        sb.incrementProgressBy(-1);
+                        prog -= 1;
+                    }
+                    String displayText = "" + prog;
+                    sBarText.setText(displayText);
                 }
 
-                EditText desc = findViewById(R.id.multiDescription);
-                movieDescription = desc.getText().toString();
-                if ( movieDescription.equals("") ) {
-                    movie.setDescription("Unknown");
-                }  else {
-                    movie.setDescription(movieDescription);
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
                 }
 
-                movieGenre = genre.getSelectedItem().toString();
-                movie.setGenre(movieGenre);
-                movie.setRating(sBarText.getText().toString());
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
 
-                TextInputLayout year = findViewById(R.id.yearTextInput);
-                movieYear = year.getEditText().getText().toString();
-                if ( !movieYear.equals("") ) {
-                    Log.d("Items", "Made it past regular expression in year" );
-                    if ( !movieYear.matches(regularExpression) || Integer.parseInt(movieYear) < min ||
-                            Integer.parseInt(movieYear) > max ) {
-                        if ( !movieYear.matches(regularExpression) ) {
-                            year.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_size), Toast.LENGTH_LONG).show();
-                            erno = false;
-                        } else if ( Integer.parseInt(movieYear) < min ) {
-                            year.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_less_than), Toast.LENGTH_LONG).show();
-                            erno = false;
+                }
+            });
+
+        if ( intent.getExtras() == null ) {
+
+            findViewById(R.id.addMovieBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    TextInputLayout name = findViewById(R.id.movieNameTextInput);
+                    movieName = name.getEditText().getText().toString();
+                    Log.d("Items", "Name is " + movieName.isEmpty());
+                    if (movieName.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.movie_name_issue), Toast.LENGTH_LONG).show();
+                        erno = false;
+                    } else {
+                        movie.setName(movieName);
+                    }
+
+                    EditText desc = findViewById(R.id.multiDescription);
+                    movieDescription = desc.getText().toString();
+                    if (movieDescription.equals("")) {
+                        movie.setDescription("Unknown");
+                    } else {
+                        movie.setDescription(movieDescription);
+                    }
+
+                    movieGenre = genre.getSelectedItem().toString();
+                    movie.setGenre(movieGenre);
+                    movie.setRating(sBarText.getText().toString());
+
+                    TextInputLayout year = findViewById(R.id.yearTextInput);
+                    movieYear = year.getEditText().getText().toString();
+                    if ( !movieYear.isEmpty() ) {
+                        Log.d("Items", "Made it past regular expression in year");
+                        if (!movieYear.matches(regularExpression) || Integer.parseInt(movieYear) < min ||
+                                Integer.parseInt(movieYear) > max) {
+                            if (!movieYear.matches(regularExpression)) {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_size), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            } else if (Integer.parseInt(movieYear) < min) {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_less_than), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            } else {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_greater_than), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            }
                         } else {
-                            year.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_greater_than), Toast.LENGTH_LONG).show();
-                            erno = false;
+                            movie.setMovieYear(movieYear);
                         }
                     } else {
-                        movie.setMovieYear(movieYear);
+                        movie.setMovieYear(null);
                     }
-                } else {
-                    movie.setMovieYear("Unknown");
-                }
 
-                TextInputLayout imdb = findViewById(R.id.imdbTextInput);
-                imdbRating = imdb.getEditText().getText().toString();
-                if ( !imdbRating.equals("") ) {
-                    Log.d("Items", "Made it past regular expression in imdb" );
-                    if ( !imdbRating.matches(imdbRegExpression) || Double.parseDouble(imdbRating) > 10.0 || Double.parseDouble(imdbRating) < 0.0) {
-                        if ( !imdbRating.matches(imdbRegExpression) ) {
-                            imdb.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_format_issue), Toast.LENGTH_LONG).show();
-                            erno = false;
-                        } else if ( Double.parseDouble(imdbRating) > 10.0 ){
-                            imdb.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_greater_than), Toast.LENGTH_LONG).show();
+                    TextInputLayout imdb = findViewById(R.id.imdbTextInput);
+                    imdbURL = imdb.getEditText().getText().toString();
+                    if ( !imdbURL.isEmpty() ) {
+                        Log.d("Items", "Made it past regular expression in imdb");
+                        if ( !URLUtil.isValidUrl(imdbURL)) {
+                            imdb.getEditText().setText(null);
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_format_issue), Toast.LENGTH_LONG);
                             erno = false;
                         } else {
-                            imdb.getEditText().setText("");
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_less_than), Toast.LENGTH_LONG).show();
-                            erno = false;
+                            movie.setImdbRating(imdbURL);
                         }
                     } else {
-                        movie.setImdbRating(imdbRating);
+                        movie.setImdbRating(null);
                     }
-                } else {
-                    movie.setImdbRating("Unknown");
-                }
 
-                Log.d("Items", "\n" +
-                        movieName + "\n" +
-                        movieDescription + "\n" +
-                        movieGenre + "\n" +
-                        sBarText.getText().toString() + "\n" +
-                        movieYear + "\n" +
-                        imdbRating);
-                if ( erno ) {
-                    Intent intent = new Intent();
-                    intent.putExtra("data", movie);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+                    Log.d("Items", "\n" +
+                            movieName + "\n" +
+                            movieDescription + "\n" +
+                            movieGenre + "\n" +
+                            sBarText.getText().toString() + "\n" +
+                            movieYear + "\n" +
+                            imdbURL);
+                    if (erno) {
+                        Intent intent = new Intent();
+                        intent.putExtra("data", movie);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
 
-                erno = true;
+                    erno = true;
+                }
+            });
+        } else {
+
+            Bundle extras = intent.getExtras();
+            Movie oldMovie = extras.getParcelable("Movie");
+            final int position = extras.getInt("position");
+
+            TextView activityTitle = findViewById(R.id.addEditTitleTextView);
+            activityTitle.setText("Edit Movie");
+
+            Button btn = findViewById(R.id.addMovieBtn);
+            btn.setText("Edit Movie");
+
+            TextInputLayout name = findViewById(R.id.movieNameTextInput);
+            name.getEditText().setText(oldMovie.getName());
+
+            EditText desc = findViewById(R.id.multiDescription);
+            desc.setText(oldMovie.getDescription());
+
+            movieGenre = oldMovie.getGenre();
+
+            switch (movieGenre) {
+                case "Action":      genre.setSelection(0);
+                                    break;
+                case "Animation":   genre.setSelection(1);
+                                    break;
+                case "Comedy":      genre.setSelection(2);
+                                    break;
+                case "Documentary": genre.setSelection(3);
+                                    break;
+                case "Family":      genre.setSelection(4);
+                                    break;
+                case "Horror":      genre.setSelection(5);
+                                    break;
+                case "Crime":       genre.setSelection(6);
+                                    break;
+                case "Others":      genre.setSelection(7);
+                                    break;
             }
-        });
+
+            movieRating = oldMovie.getRating();
+            sBarText.setText(movie.getRating());
+
+            TextInputLayout year = findViewById(R.id.yearTextInput);
+            year.getEditText().setText(oldMovie.getMovieYear());
+
+            TextInputLayout imdb = findViewById(R.id.imdbTextInput);
+            imdb.getEditText().setText(oldMovie.getImdbRating());
+
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    TextInputLayout name = findViewById(R.id.movieNameTextInput);
+                    movieName = name.getEditText().getText().toString();
+                    Log.d("Items", "Name is " + movieName.isEmpty());
+                    if (movieName.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.movie_name_issue), Toast.LENGTH_LONG).show();
+                        erno = false;
+                    } else {
+                        movie.setName(movieName);
+                    }
+
+                    EditText desc = findViewById(R.id.multiDescription);
+                    movieDescription = desc.getText().toString();
+                    if (movieDescription.equals("")) {
+                        movie.setDescription("Unknown");
+                    } else {
+                        movie.setDescription(movieDescription);
+                    }
+
+                    movieGenre = genre.getSelectedItem().toString();
+                    movie.setGenre(movieGenre);
+                    movie.setRating(sBarText.getText().toString());
+
+                    TextInputLayout year = findViewById(R.id.yearTextInput);
+                    movieYear = year.getEditText().getText().toString();
+                    if ( !movieYear.isEmpty() ) {
+                        Log.d("Items", "Made it past regular expression in year");
+                        if (!movieYear.matches(regularExpression) || Integer.parseInt(movieYear) < min ||
+                                Integer.parseInt(movieYear) > max) {
+                            if (!movieYear.matches(regularExpression)) {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_size), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            } else if (Integer.parseInt(movieYear) < min) {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_less_than), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            } else {
+                                year.getEditText().setText(null);
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_greater_than), Toast.LENGTH_LONG).show();
+                                erno = false;
+                            }
+                        } else {
+                            movie.setMovieYear(movieYear);
+                        }
+                    } else {
+                        movie.setMovieYear(null);
+                    }
+
+                    TextInputLayout imdb = findViewById(R.id.imdbTextInput);
+                    imdbURL = imdb.getEditText().getText().toString();
+                    if ( !imdbURL.isEmpty() ) {
+                        Log.d("Items", "Made it past regular expression in imdb");
+                        if ( !URLUtil.isValidUrl(imdbURL)) {
+                            imdb.getEditText().setText(null);
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_format_issue), Toast.LENGTH_LONG);
+                            erno = false;
+                        } else {
+                            movie.setImdbRating(imdbURL);
+                        }
+                    } else {
+                        movie.setImdbRating(null);
+                    }
+
+                    Log.d("Items", "\n" +
+                            movieName + "\n" +
+                            movieDescription + "\n" +
+                            movieGenre + "\n" +
+                            sBarText.getText().toString() + "\n" +
+                            movieYear + "\n" +
+                            imdbURL);
+                    if (erno) {
+                        Intent intent = new Intent();
+                        intent.putExtra("data", movie);
+                        intent.putExtra("position", position);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    erno = true;
+                }
+            });
+        }
     }
 }
