@@ -1,0 +1,93 @@
+package com.example.gameon.movierating;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    public static final int REQ_CODE = 10;
+    ArrayList<Movie> movies;
+    Movie movie;
+
+    public MainActivity() {
+        movies = new ArrayList<>();
+        movie = new Movie();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        findViewById(R.id.addBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addIntent = new Intent(getApplicationContext(), AddMovie.class);
+                startActivityForResult(addIntent, REQ_CODE);
+            }
+        });
+
+        findViewById(R.id.editBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder listMovies = new AlertDialog.Builder(MainActivity.this);
+                listMovies.setTitle("Pick a Movie");
+
+                final ArrayList<String> names = new ArrayList<>();
+                for ( int i = 0; i < movies.size(); i++ ) {
+                    names.add(movies.get(i).getName());
+                }
+                Log.d("Items", names.toString());
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.select_dialog_item, names);
+                Log.d("Items", "Made it past the arrayadapter");
+//                listMovies.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+                listMovies.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("Items", "Made it in onClick" + adapter.getItem(which));
+                        String n = adapter.getItem(which);
+                        dialog.dismiss();
+                    }
+                });
+                listMovies.show();
+//                Toast.makeText(getApplicationContext(), names+"", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( requestCode == REQ_CODE && data != null ) {
+            if ( resultCode == RESULT_OK ) {
+                Log.d("Items", "Made it into return result");
+                Bundle bundle = data.getExtras();
+                movie = bundle.getParcelable("data");
+                movies.add(movie);
+                Log.d("Items", movie.name);
+            } else if ( resultCode == RESULT_CANCELED ) {
+
+            } else {
+
+            }
+
+        }
+    }
+
+
+}
