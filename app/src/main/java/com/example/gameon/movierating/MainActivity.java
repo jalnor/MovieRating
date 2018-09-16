@@ -64,7 +64,29 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(), names+"", Toast.LENGTH_LONG).show();
             }
         });
+
+        findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] names = new String[movies.size()];
+                for ( int i = 0; i < movies.size(); i++ ) {
+                    names[i]= movies.get(i).getName();
+                }
+                AlertDialog listMovies = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Pick a Movie")
+                        .setItems(names, deleteMovie)
+                        .create();
+                listMovies.show();
+            }
+        });
     }
+
+    DialogInterface.OnClickListener deleteMovie = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            movies.remove(which);
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
