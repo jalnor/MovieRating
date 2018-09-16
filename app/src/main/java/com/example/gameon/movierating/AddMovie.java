@@ -166,7 +166,7 @@ public class AddMovie extends AppCompatActivity {
 
             Bundle extras = intent.getExtras();
             Movie oldMovie = extras.getParcelable("Movie");
-            final int position = extras.getInt("position");
+            final int position = extras.getInt("Position");
 
             TextView activityTitle = findViewById(R.id.addEditTitleTextView);
             activityTitle.setText("Edit Movie");
@@ -284,7 +284,8 @@ public class AddMovie extends AppCompatActivity {
                             movieGenre + "\n" +
                             sBarText.getText().toString() + "\n" +
                             movieYear + "\n" +
-                            imdbURL);
+                            imdbURL + "\n" +
+                            position);
                     if (erno) {
                         Intent intent = new Intent();
                         intent.putExtra("data", movie);

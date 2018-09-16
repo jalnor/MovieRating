@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("Items", "Made it in onClick" + adapter.getItem(which));
                         String name = adapter.getItem(which);
+                        Log.d("Itmes", "The position of the movie we are sending to edit is " + which);
                         dialog.dismiss();
                         if ( !name.isEmpty() ) {
                             Intent editIntent = new Intent(getApplicationContext(), AddMovie.class);
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             if ( resultCode == RESULT_OK ) {
                 Log.d("Items", "Made it into return result");
                 Bundle bundle = data.getExtras();
+
                 movie = bundle.getParcelable("data");
                 if ( movie != null ) {
                     movies.add(movie);
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
             if ( resultCode == RESULT_OK ) {
                 Log.d("Items", "Made it into return result");
                 Bundle bundle = data.getExtras();
+
+                Log.d("Items", "THis is the position sent back with intent " + bundle.getInt("position"));
                 movie = bundle.getParcelable("data");
                 if ( movie != null ) {
                     movies.set(bundle.getInt("position"), movie);
