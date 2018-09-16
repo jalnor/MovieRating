@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="7dp"
         android:background="?attr/colorPrimaryDark"
         android:minHeight="?attr/actionBarSize"
@@ -69,7 +69,7 @@
             android:id="@+id/ti_movie_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Movie Name"
+            android:hint="@string/tv_add_movie_name_hint"
             android:maxLength="50" />
     </android.support.design.widget.TextInputLayout>
 
@@ -82,6 +82,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="@string/desc_hint"
         android:inputType="textMultiLine"
         android:maxLength="1000"
         android:visibility="visible"
@@ -230,7 +231,7 @@
         android:id="@+id/addMovieBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -248,7 +249,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="@string/tv_seek_bar"
         app:layout_constraintBottom_toTopOf="@+id/yearTextInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/seekBar"

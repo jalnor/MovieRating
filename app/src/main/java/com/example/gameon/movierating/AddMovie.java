@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddMovie extends AppCompatActivity {
 
@@ -23,6 +24,11 @@ public class AddMovie extends AppCompatActivity {
     public static String movieRating = "";
     public static String movieYear = "";
     public static String imdbRating = "";
+    public String regularExpression = "^\\d{4}$";
+    public String imdbRegExpression = "^[+-]?([0-9]*[.])?[0-9]+$";
+    public int min = 1921;
+    public int max = 2018;
+    public boolean erno = true;
     Movie movie = new Movie();
 
 
@@ -33,23 +39,7 @@ public class AddMovie extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
 
-        findViewById(R.id.ti_movie_name).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextInputLayout name = findViewById(R.id.movieNameTextInput);
-                name.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-                name.setError("");
-            }
-        });
-
-        findViewById(R.id.multiDescription).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText desc = findViewById(R.id.multiDescription);
-                desc.setError("");
-            }
-        });
-
+        //
         final Spinner genre = findViewById(R.id.spinner);
         String[] genres = new String[]{"Action","Animation","Comedy","Documentary","Family","Horror","Crime","Others"};
         ArrayAdapter<String> adapt = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, genres);
@@ -85,35 +75,16 @@ public class AddMovie extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.yearEditText).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextInputLayout year = findViewById(R.id.yearTextInput);
-                year.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-                year.setError("");
-            }
-        });
-
-        findViewById(R.id.imdbEditText).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextInputLayout imdb = findViewById(R.id.imdbTextInput);
-                imdb.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-                imdb.setError("");
-            }
-        });
-
         findViewById(R.id.addMovieBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-
                 TextInputLayout name = findViewById(R.id.movieNameTextInput);
                 movieName = name.getEditText().getText().toString();
-                if ( movieName.equals("") ) {
-                    name.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.error));
-                    name.setError("Movie must have a name");
+                Log.d("Items", "Name is " + movieName.isEmpty());
+                if ( movieName.isEmpty() ) {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.movie_name_issue),Toast.LENGTH_LONG).show();
+                    erno = false;
                 } else {
                     movie.setName(movieName);
                 }
@@ -121,8 +92,7 @@ public class AddMovie extends AppCompatActivity {
                 EditText desc = findViewById(R.id.multiDescription);
                 movieDescription = desc.getText().toString();
                 if ( movieDescription.equals("") ) {
-                    desc.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.error));
-                    desc.setError("Movie must have a description");
+                    movie.setDescription("Unknown");
                 }  else {
                     movie.setDescription(movieDescription);
                 }
@@ -133,23 +103,54 @@ public class AddMovie extends AppCompatActivity {
 
                 TextInputLayout year = findViewById(R.id.yearTextInput);
                 movieYear = year.getEditText().getText().toString();
-                if ( movieYear.equals("") ) {
-                    year.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.error));
-                    year.setError("Movie must have a year");
+                if ( !movieYear.equals("") ) {
+                    Log.d("Items", "Made it past regular expression in year" );
+                    if ( !movieYear.matches(regularExpression) || Integer.parseInt(movieYear) < min ||
+                            Integer.parseInt(movieYear) > max ) {
+                        if ( !movieYear.matches(regularExpression) ) {
+                            year.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_size), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        } else if ( Integer.parseInt(movieYear) < min ) {
+                            year.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_less_than), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        } else {
+                            year.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_greater_than), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        }
+                    } else {
+                        movie.setMovieYear(movieYear);
+                    }
                 } else {
-                    movie.setMovieYear(movieYear);
+                    movie.setMovieYear("Unknown");
                 }
 
                 TextInputLayout imdb = findViewById(R.id.imdbTextInput);
                 imdbRating = imdb.getEditText().getText().toString();
-                if ( imdbRating.equals("") ) {
-                    imdb.getEditText().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.error));
-                    imdb.setError("Movie needs an imdb rating");
+                if ( !imdbRating.equals("") ) {
+                    Log.d("Items", "Made it past regular expression in imdb" );
+                    if ( !imdbRating.matches(imdbRegExpression) || Double.parseDouble(imdbRating) > 10.0 || Double.parseDouble(imdbRating) < 0.0) {
+                        if ( !imdbRating.matches(imdbRegExpression) ) {
+                            imdb.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_format_issue), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        } else if ( Double.parseDouble(imdbRating) > 10.0 ){
+                            imdb.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_greater_than), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        } else {
+                            imdb.getEditText().setText("");
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_less_than), Toast.LENGTH_LONG).show();
+                            erno = false;
+                        }
+                    } else {
+                        movie.setImdbRating(imdbRating);
+                    }
                 } else {
-                    movie.setImdbRating(imdbRating);
+                    movie.setImdbRating("Unknown");
                 }
-
-
 
                 Log.d("Items", "\n" +
                         movieName + "\n" +
@@ -158,22 +159,15 @@ public class AddMovie extends AppCompatActivity {
                         sBarText.getText().toString() + "\n" +
                         movieYear + "\n" +
                         imdbRating);
+                if ( erno ) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", movie);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
 
-                Intent intent = new Intent();
-                intent.putExtra("data", movie);
-                setResult(RESULT_OK, intent);
-                finish();
-
-
-
+                erno = true;
             }
         });
-
-
-
-
-
-
-
     }
 }

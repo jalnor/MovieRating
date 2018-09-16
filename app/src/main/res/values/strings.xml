@@ -9,10 +9,20 @@
     <string name="tv_add_movie">Add Movie</string>
     <string name="tv_add_movie_name">Name:</string>
     <string name="tv_add_movie_description">Description:</string>
-    <string name="tv_add_movie_name_hint">Enter Movie Name</string>
+    <string name="tv_add_movie_name_hint">Enter Movie Name (Up to 50 characters)</string>
     <string name="tv_genre">Genre:</string>
     <string name="tv_add_rating">Rating:</string>
     <string name="tv_add_movie_year">Year:</string>
     <string name="tv_movie_imdb">IMDB:</string>
     <string name="btn_add_movie">Add Movie</string>
+    <string name="imdb_error">IMDB rating must be between 0.0 and 10.0</string>
+    <string name="movie_name_issue">Movie must have a name</string>
+    <string name="year_size">Year must be a four digit number (e.g. 1980)</string>
+    <string name="year_less_than">Year cannot be less than 1921</string>
+    <string name="year_greater_than">Year cannot be greater than 2018</string>
+    <string name="desc_hint">Enter up to 1000 characters</string>
+    <string name="imdb_format_issue">IMDB rating must be of 0.0 format</string>
+    <string name="imdb_less_than">IMDB rating must be greater than or equal to 0.0</string>
+    <string name="imdb_greater_than">IMDB rating must be less than or equal to 10.0</string>
+    <string name="tv_seek_bar" />
 </resources>

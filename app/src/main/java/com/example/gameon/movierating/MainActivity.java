@@ -51,12 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Items", names.toString());
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.select_dialog_item, names);
                 Log.d("Items", "Made it past the arrayadapter");
-//                listMovies.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
+
                 listMovies.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -78,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Items", "Made it into return result");
                 Bundle bundle = data.getExtras();
                 movie = bundle.getParcelable("data");
-                movies.add(movie);
+                if ( movie != null ) {
+                    movies.add(movie);
+                }
                 Log.d("Items", movie.name);
             } else if ( resultCode == RESULT_CANCELED ) {
 
