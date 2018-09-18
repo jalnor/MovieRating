@@ -1,6 +1,6 @@
 /****************************************
  * Assignment HW3                       *
- * Movie.java                           *
+ * Movie.java                            *
  * Jarrod Norris, Andrew Schelesinger   *
  ****************************************/
 

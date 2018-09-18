@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("Items", "Made it in onClick" + adapter.getItem(which));
                         String name = adapter.getItem(which);
-                        Log.d("Itmes", "The position of the movie we are sending to edit is " + which);
+                        Log.d("Itemes", "The position of the movie we are sending to edit is " + which);
                         dialog.dismiss();
                         if ( !name.isEmpty() ) {
                             Intent editIntent = new Intent(getApplicationContext(), AddMovie.class);

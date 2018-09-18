@@ -40,4 +40,7 @@ Jarrod Norris, Andrew Schlesinger
     <string name="year_header">Year:</string>
     <string name="imbd_header">IMBD:</string>
     <string name="finish_button">Finish</string>
+    <string name="desc_req">Description is required</string>
+    <string name="year_req">Year is required</string>
+    <string name="imdb_req">IMDB url is required</string>
 </resources>
