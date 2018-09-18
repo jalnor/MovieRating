@@ -31,7 +31,7 @@ public class AddMovie extends AppCompatActivity {
     public String regularExpression = "^\\d{4}$";
     public String imdbURL = "";
     public int min = 1921;
-    public int max = 2018;
+    public int max = 2100;
     public boolean erno = true;
     Movie movie = new Movie();
 
@@ -90,7 +90,8 @@ public class AddMovie extends AppCompatActivity {
                     EditText desc = findViewById(R.id.multiDescription);
                     movieDescription = desc.getText().toString();
                     if ( movieDescription.isEmpty() ) {
-                        movie.setDescription("Unknown");
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.desc_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     } else {
                         movie.setDescription(movieDescription);
                     }
@@ -127,7 +128,8 @@ public class AddMovie extends AppCompatActivity {
                             movie.setMovieYear(movieYear);
                         }
                     } else {
-                        movie.setMovieYear(null);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     }
                     /* Gets the imdb url and validates it using the built-in function URLUtil.isValid
                      * If not valid toasts needs correct format, else adds url or null to movie object
@@ -144,7 +146,8 @@ public class AddMovie extends AppCompatActivity {
                             movie.setImdbRating(imdbURL);
                         }
                     } else {
-                        movie.setImdbRating(null);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     }
                     // Test log
                     Log.d("Items", "\n" +
@@ -231,7 +234,8 @@ public class AddMovie extends AppCompatActivity {
                     EditText desc = findViewById(R.id.multiDescription);
                     movieDescription = desc.getText().toString();
                     if (movieDescription.equals("")) {
-                        movie.setDescription("Unknown");
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.desc_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     } else {
                         movie.setDescription(movieDescription);
                     }
@@ -268,7 +272,8 @@ public class AddMovie extends AppCompatActivity {
                             movie.setMovieYear(movieYear);
                         }
                     } else {
-                        movie.setMovieYear(null);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.year_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     }
                     /* Gets the imdb url and validates it using the built-in function URLUtil.isValid
                      * If not valid toasts needs correct format, else adds url or null to movie object
@@ -285,7 +290,8 @@ public class AddMovie extends AppCompatActivity {
                             movie.setImdbRating(imdbURL);
                         }
                     } else {
-                        movie.setImdbRating(null);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.imdb_req), Toast.LENGTH_LONG).show();
+                        erno = false;
                     }
                     // Test log
                     Log.d("Items", "\n" +
