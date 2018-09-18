@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putParcelableArrayListExtra("original", movies);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }else{
-                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG).show();
                 }
             }
         });
