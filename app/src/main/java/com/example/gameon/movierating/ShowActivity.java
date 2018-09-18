@@ -55,11 +55,9 @@ public class ShowActivity extends AppCompatActivity {
         findViewById(R.id.imageView4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((current - 1 ) >=  0) {
+               if ((current - 1 ) >=  0  && current != movies.size()) {
                     current--;
                     showDetails(movies.get(current));
-                }else{
-                    showDetails(movies.get(0));
                 }
             }
         });
@@ -68,11 +66,9 @@ public class ShowActivity extends AppCompatActivity {
         findViewById(R.id.imageView2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((current + 1 ) <= movies.size()) {
+                if ((current + 1 ) <= movies.size() && current != movies.size()) {
                     current++;
                     showDetails(movies.get(current));
-                }else{
-                    showDetails(movies.get(movies.size()-1));
                 }
             }
         });
