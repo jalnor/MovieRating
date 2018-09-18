@@ -113,18 +113,22 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.showByYearBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Movie> sortedMovies = movies;
-                Collections.sort(sortedMovies, new Comparator<Movie>() {
-                    public int compare(Movie o1, Movie o2) {
-                        return o1.getMovieYear().compareTo(o2.getMovieYear());
-                    }
-                });
-                System.out.print(sortedMovies);
-                Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
-                intent.putExtra("header", "Movies by Year");
-                intent.putParcelableArrayListExtra("movies", sortedMovies);
-                intent.putParcelableArrayListExtra("original", movies);
-                startActivity(intent);
+                if (movies.size() > 0) {
+                    ArrayList<Movie> sortedMovies = movies;
+                    Collections.sort(sortedMovies, new Comparator<Movie>() {
+                        public int compare(Movie o1, Movie o2) {
+                            return o1.getMovieYear().compareTo(o2.getMovieYear());
+                        }
+                    });
+                    System.out.print(sortedMovies);
+                    Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
+                    intent.putExtra("header", "Movies by Year");
+                    intent.putParcelableArrayListExtra("movies", sortedMovies);
+                    intent.putParcelableArrayListExtra("original", movies);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG);
+                }
             }
         });
 
@@ -132,19 +136,23 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.showByRatingBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Movie> sortedMovies = movies;
-                Collections.sort(sortedMovies, new Comparator<Movie>() {
-                    public int compare(Movie o1, Movie o2) {
-                        return o1.getRating().compareTo(o2.getMovieYear());
-                    }
-                });
-                System.out.print(sortedMovies.toString());
-                Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
-                intent.putExtra("header", "Movies by Rating");
-                intent.putParcelableArrayListExtra("movies", sortedMovies);
-                intent.putParcelableArrayListExtra("original", movies);
-                startActivity(intent);
-                finish();
+                if (movies.size() > 0) {
+                    ArrayList<Movie> sortedMovies = movies;
+                    Collections.sort(sortedMovies, new Comparator<Movie>() {
+                        public int compare(Movie o1, Movie o2) {
+                            return o1.getRating().compareTo(o2.getMovieYear());
+                        }
+                    });
+                    System.out.print(sortedMovies.toString());
+                    Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
+                    intent.putExtra("header", "Movies by Rating");
+                    intent.putParcelableArrayListExtra("movies", sortedMovies);
+                    intent.putParcelableArrayListExtra("original", movies);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Add a movie before Viewing", Toast.LENGTH_LONG);
+                }
             }
         });
     }
