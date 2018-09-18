@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle bundle = getIntent().getExtras();
+        try{
+            movies = bundle.getParcelableArrayList("original");
+        }catch (NullPointerException e){
+        }
+
         // Gets the add button and creates an intent that is sent to AddMovie activity
         findViewById(R.id.addBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +106,45 @@ public class MainActivity extends AppCompatActivity {
                         .setItems(names, deleteMovie)
                         .create();
                 listMovies.show();
+            }
+        });
+
+        // Gets the show by year button and opens the show activity allowing the user to scrub by year
+        findViewById(R.id.showByYearBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Movie> sortedMovies = movies;
+                Collections.sort(sortedMovies, new Comparator<Movie>() {
+                    public int compare(Movie o1, Movie o2) {
+                        return o1.getMovieYear().compareTo(o2.getMovieYear());
+                    }
+                });
+                System.out.print(sortedMovies);
+                Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
+                intent.putExtra("header", "Movies by Year");
+                intent.putParcelableArrayListExtra("movies", sortedMovies);
+                intent.putParcelableArrayListExtra("original", movies);
+                startActivity(intent);
+            }
+        });
+
+        // Gets the show by rating button and opens the show activity allowing the user to scrub by rating
+        findViewById(R.id.showByRatingBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Movie> sortedMovies = movies;
+                Collections.sort(sortedMovies, new Comparator<Movie>() {
+                    public int compare(Movie o1, Movie o2) {
+                        return o1.getRating().compareTo(o2.getMovieYear());
+                    }
+                });
+                System.out.print(sortedMovies.toString());
+                Intent intent = new Intent(getApplicationContext(), ShowActivity.class);
+                intent.putExtra("header", "Movies by Rating");
+                intent.putParcelableArrayListExtra("movies", sortedMovies);
+                intent.putParcelableArrayListExtra("original", movies);
+                startActivity(intent);
+                finish();
             }
         });
     }

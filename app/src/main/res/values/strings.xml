@@ -31,4 +31,13 @@ Jarrod Norris, Andrew Schlesinger
     <string name="tv_edit_title">Edit Movie</string>
     <string name="intent_canceled">The request was canceled</string>
     <string name="other_issue">Something went wrong</string>
+    <string name="show_title">Movies by Year</string>
+    <string name="show_gui_title">Movies by Year</string>
+    <string name="title_header">Title:</string>
+    <string name="description_header">Description:</string>
+    <string name="genre_header">Genre:</string>
+    <string name="rating_header">Rating:</string>
+    <string name="year_header">Year:</string>
+    <string name="imbd_header">IMBD:</string>
+    <string name="finish_button">Finish</string>
 </resources>

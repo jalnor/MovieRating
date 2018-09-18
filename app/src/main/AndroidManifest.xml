@@ -22,6 +22,7 @@ Jarrod Norris, Andrew Schlesinger
             </intent-filter>
         </activity>
         <activity android:name=".AddMovie" />
+        <activity android:name=".ShowActivity" />
     </application>
 
 </manifest>
